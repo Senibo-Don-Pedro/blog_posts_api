@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/posts")
 public class PostController {
 
-    @PostMapping(consumes = {"application/xml", "application/json"},
-            produces = {"application/xml", "application/json"}
+
+    @PostMapping(
+            consumes = {"application/json", "application/xml"},
+            produces = {"application/json", "application/xml"}
     )
     public PostRequest createBlogPost(@RequestBody PostRequest postRequest) {
         return postRequest;
