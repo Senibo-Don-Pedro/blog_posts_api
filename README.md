@@ -3,6 +3,8 @@
 ## Overview
 The Blog Posts API is a Spring Boot application that provides CRUD operations for managing blog posts. It integrates with a relational database to persist posts, categories, and tags, and exposes a clean REST interface with built-in search and pagination.
 
+**Project page URL:** [https://roadmap.sh/projects/blogging-platform-api](https://roadmap.sh/projects/blogging-platform-api)
+
 ## ✨ Features
 - Create, Read, Update, Delete (CRUD) for blog posts
 - Search posts by title or content (via `searchTerm` query)
