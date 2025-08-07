@@ -1,13 +1,14 @@
 # Blog Posts API
 
 ## Overview
-The Blog Posts API is a Spring Boot application that provides CRUD operations for managing blog posts. It integrates with a relational database to persist posts, categories, and tags, and exposes a clean REST interface with built-in search and pagination.
+The Blog Posts API is a Spring Boot application that provides CRUD operations for managing blog posts. It integrates with a relational database to persist posts, categories, and tags, and exposes a clean REST interface with built-in search and support for multiple response formats.
 
 **Project page URL:** [https://roadmap.sh/projects/blogging-platform-api](https://roadmap.sh/projects/blogging-platform-api)
 
 ## ✨ Features
 - Create, Read, Update, Delete (CRUD) for blog posts
 - Search posts by title or content (via `searchTerm` query)
+- **Dual format support**: JSON and XML responses via Content-Type negotiation
 - Consistent `ApiResponse<T>` wrapper for all endpoints
 - Global exception handling for validation, malformed UUIDs, missing entities, etc.
 - Interactive Swagger/OpenAPI documentation
@@ -17,6 +18,7 @@ The Blog Posts API is a Spring Boot application that provides CRUD operations fo
 - **Spring Web** for REST endpoints
 - **Spring Data JPA** + Hibernate for persistence
 - **MySQL** as the database
+- **Jackson XML** for XML serialization/deserialization
 - **Lombok** to reduce boilerplate
 - **springdoc-openapi** for Swagger UI
 
@@ -72,6 +74,19 @@ You should see Spring Boot start-up logs indicating the application is listening
 
 ## API Usage
 
+### Content-Type Negotiation
+The API supports both JSON and XML formats. Use the `Accept` header to specify your preferred format:
+
+**For JSON responses (default):**
+```bash
+curl -H "Accept: application/json" http://localhost:8080/api/v1/posts
+```
+
+**For XML responses:**
+```bash
+curl -H "Accept: application/xml" http://localhost:8080/api/v1/posts
+```
+
 ### Swagger UI
 After running, open Swagger UI to explore all endpoints and models:
 
@@ -114,7 +129,7 @@ blog_posts_api/
 ## Code Explanation
 
 ### PostController.java
-Handles all REST endpoints for posts:
+Handles all REST endpoints for posts with support for both JSON and XML:
 
 - `GET /api/v1/posts` → list (with optional searchTerm)
 - `GET /api/v1/posts/{id}` → fetch by UUID
@@ -122,13 +137,43 @@ Handles all REST endpoints for posts:
 - `PUT /api/v1/posts/{id}` → update
 - `DELETE /api/v1/posts/{id}` → delete
 
+All endpoints automatically detect the requested format via the `Accept` header and return responses in the appropriate format (JSON or XML).
+
 ### GlobalExceptionHandler.java
 Centralizes exception handling for:
 
 - `MethodArgumentNotValidException` → 400 with validation errors
-- `HttpMessageNotReadableException` → invalid JSON/enums
+- `HttpMessageNotReadableException` → invalid JSON/XML/enums
 - `IllegalArgumentException` → malformed UUIDs
 - `EntityNotFoundException` → 404 for missing posts
+
+## Response Format Examples
+
+### JSON Response
+```json
+{
+  "success": true,
+  "message": "Post retrieved successfully",
+  "data": {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "title": "Sample Post",
+    "content": "This is a sample blog post content."
+  }
+}
+```
+
+### XML Response
+```xml
+<ApiResponse>
+  <success>true</success>
+  <message>Post retrieved successfully</message>
+  <data>
+    <id>123e4567-e89b-12d3-a456-426614174000</id>
+    <title>Sample Post</title>
+    <content>This is a sample blog post content.</content>
+  </data>
+</ApiResponse>
+```
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
