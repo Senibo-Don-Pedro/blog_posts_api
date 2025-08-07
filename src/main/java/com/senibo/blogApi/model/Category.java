@@ -35,4 +35,10 @@ public enum Category {
         }
         throw new IllegalArgumentException("Invalid category: " + displayName);
     }
+
+    public static String getAllowedDisplayNames() {
+        return java.util.Arrays.stream(Category.values())
+                .map(Category::getDisplayName)
+                .collect(java.util.stream.Collectors.joining(", "));
+    }
 }
